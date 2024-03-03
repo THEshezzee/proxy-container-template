@@ -1,0 +1,12 @@
+# client.toml
+[client]
+remote_addr = "example.com:2333" # The address of the server. The port must be the same with the port in `server.bind_addr`
+
+[client.transport]
+type = "noise"
+[client.transport.noise]
+remote_public_key = "YOUR_PUBKEY"
+
+[client.services.proxy]
+token = "YOUR_TOKEN" # Must be the same with the server to pass the validation
+local_addr = "127.0.0.1:40080"

@@ -1,0 +1,87 @@
+{
+  "experimental": {
+    "clash_api": {
+      "external_controller": ":9092",
+      "external_ui": "yacd",
+      "secret": "OPTIONAL_SECRET",
+      "default_mode": "rule"
+    }
+  },
+  "log": {
+    "disabled": false,
+    "level": "warn",
+    "timestamp": false
+  },
+  "inbounds": [
+    {
+      "type": "socks",
+      "tag": "socks-in",
+      "listen": "127.0.0.1",
+      "listen_port": 40080,
+      "tcp_fast_open": true
+    }
+  ],
+  "outbounds": [
+    {
+      "type": "selector",
+      "tag": "select",
+      "outbounds": [
+        "direct",
+        "wg-cloudflare"
+      ]
+    },
+    {
+      "type": "direct",
+      "tag": "direct"
+    },
+    {
+      "type": "block",
+      "tag": "block"
+    },
+    {
+      "type": "socks",
+      "tag": "tor",
+      "server_port": 9050,
+      "server": "127.0.0.1"
+    },
+    {
+      "type": "wireguard",
+      "tag": "wg-cloudflare",
+      "system_interface": false,
+      "interface_name": "shit",
+      "local_address": [
+        "172.16.0.2/32",
+        "d01:5ca1:ab1e:8e6d:8c5:3115:6cef:d8c7/128"
+      ],
+      "private_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+      "peers": [
+        {
+          "server": "162.159.193.5",
+          "server_port": 2408,
+          "public_key": "bmXOC+F1FxEMF9dyiK2H5/1SUtzH0JuVo51h2wPfgyo=",
+          "allowed_ips": [
+            "0.0.0.0/0",
+            "::/1",
+            "8000::/1"
+          ]
+        }
+      ]
+    }
+  ],
+  "route": {
+    "rules": [
+      {
+        "inbound": [
+          "socks-in"
+        ],
+        "geoip": "private",
+        "outbound": "block"
+      },
+      {
+        "inbound": ["socks-in"],
+        "domain_suffix": [".onion"],
+        "outbound": "tor"
+      }
+    ]
+  }
+}
