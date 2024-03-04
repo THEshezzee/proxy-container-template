@@ -27,7 +27,8 @@
       "tag": "select",
       "outbounds": [
         "direct",
-        "wg-cloudflare"
+        "wg-cloudflare",
+        "tor"
       ]
     },
     {
